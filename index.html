@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Run Python in the Browser with Pyodide</title>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.23.0/full/pyodide.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #output {
+            background-color: #f4f4f4;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Run Python Code in the Browser</h1>
+<p>Enter Python code and click "Run" to execute it.</p>
+
+<textarea id="python-code" rows="6" cols="50">
+# Sample Python code
+def greet(name):
+    return f"Hello, {name}!"
+
+greet("WebAssembly")
+</textarea>
+<br>
+<button id="run-btn">Run</button>
+
+<h3>Output:</h3>
+<div id="output"></div>
+
+<script>
+    async function main() {
+        // Load Pyodide
+        let pyodide = await loadPyodide();
+
+        // Add an event listener to the button
+        document.getElementById("run-btn").addEventListener("click", async () => {
+            // Get the Python code from the textarea
+            let pythonCode = document.getElementById("python-code").value;
+            try {
+                // Run the Python code and display the result
+                let result = await pyodide.runPythonAsync(pythonCode);
+                document.getElementById("output").innerText = result;
+            } catch (error) {
+                // If there's an error, display it in the output div
+                document.getElementById("output").innerText = error;
+            }
+        });
+    }
+
+    // Initialize Pyodide
+    main();
+</script>
+
+</body>
+</html>
